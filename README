@@ -1,0 +1,79 @@
+# Glide fullstack-th 
+
+Big Corp API Project
+
+## Run project
+
+For the first time run project by executing:
+
+1. $ python3 -m venv myvenv
+2. $ ./myvenv/bin/activate
+3. $ pip install --upgrade pip
+4. $ cd service
+4. $ pip install -r requirements.txt
+5. $ python manage.py runserver
+
+
+## Config default parameters
+
+### Config on settings  (service/service/settings.py)
+
+API_CONFIG = {
+    'limit': 100, #  default limit of json return instances
+    'max_limit': 1000, #  max limit of json return instances
+    'expand_availables': [
+        'manager', 'office', 'department',
+        'manager.office', 'department.superdepartment',
+        'manager.department', 'manager.department.superdepartment'
+    ], #  options for expand parameter
+    'query_url': 'https://rfy56yfcwk.execute-api.us-west-1.amazonaws.com/bigcorp/employees',
+    #  url from api for querys
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mistakes
+
+"""for option in expand:
+    if option == 'manager' and employee['manager']:
+        employee['manager'] = employee_detail(employee['manager'], None)
+    elif option == 'office' and employee['office']:
+        for office in offices:
+            if office['id'] == employee['office']:
+                employee['office'] = office
+    elif option == 'department' and employee['department']:
+        for department in departments:
+            if department['id'] == employee['department']:
+                employee['department'] = department
+    elif option == 'manager.office' and employee['office']:
+        employee['manager'] = employee_detail(employee['manager'], ['office'])
+    elif option == 'department.superdepartment' and employee['department']:
+        for department in departments:
+            if department['id'] == employee['department']:
+                employee['department'] = department
+    elif option == 'manager.department' and employee['manager']:
+        employee['manager'] = employee_detail(employee['manager'], ['department'])
+    elif option == 'manager.department.superdepartment' and employee['manager']:
+        for department in departments:
+            if department['id'] == employee['department']:
+                employee['department'] = department"""
