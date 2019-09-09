@@ -6,13 +6,14 @@ Big Corp API Project
 
 For the first time run project by executing:
 
+```
 1. $ python3 -m venv myvenv
 2. $ ./myvenv/bin/activate
 3. $ pip install --upgrade pip
 4. $ cd service
 4. $ pip install -r requirements.txt
 5. $ python manage.py runserver
-
+```
 
 ## Config default parameters
 
