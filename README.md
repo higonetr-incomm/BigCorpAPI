@@ -35,8 +35,8 @@ For the first time run project by executing:
 
 ### Routes
 
-/employees/
-/employees/<int:employee_id>/
+- /employees/
+- /employees/<int:employee_id>/
 
 #### Parameters 
 
@@ -202,16 +202,7 @@ expand
 
 Files worked
 
-docs
-resources
-service
-    |
-    service
-        |
-        **settings.py**
-        **urls.py**
-    |
-    api
-        |
-        **urls.py**
-        **views.py**
+- service/service/**settings.py**
+- service/service/**urls.py**
+- service/api/**urls.py**
+- service/api/**views.py**

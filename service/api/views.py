@@ -75,7 +75,7 @@ def employee_detail(expand, offices, departments, employee_id=None, employee=Non
             for office in offices:
                 if office['id'] == employee['office']:
                     employee['office'] = office
-        if employee['department'] and (('department' in expand and 'department.superdepartment') or ('department.superdepartment' in expand)):
+        if employee['department'] and (('department' in expand and 'department.superdepartment' in expand) or ('department.superdepartment' in expand)):
             for department in departments:
                 if department['id'] == employee['department']:
                     employee['department'] = department
@@ -115,7 +115,7 @@ def employee_list(limit, offset, expand, offices, departments):
     except:
         error_msg = {'error': 'Unexpected error from external API'}
     
-    if not error_msg and expand:    
+    if not error_msg:    
         for employee in employees:
             employee = employee_detail(expand, offices, 
                         departments, employee=employee)
@@ -137,8 +137,10 @@ def get_list_in_list(list1, list2):
             list1.remove(elem)
     if not len(list1) > 0:
         list1 = None
-    return list(dict.fromkeys(list1))
+    else:
+        list1 = list(dict.fromkeys(list1))
 
+    return list1
 
 """ Function to check parameters
 Parameters
@@ -172,8 +174,14 @@ def employees(request, employee_id=None):
     limit = request.GET.get('limit', CONFIG['limit'])
     offset = request.GET.get('offset', None)
     expand = request.GET.getlist('expand', None)
-    limit, offset, expand = check_and_get_valid_parameters(limit, offset, expand)
-    error_msg, departments, offices = load_departments_offices(expand)
+    error_msg = None
+    offices = None
+    departments = None
+
+    limit, offset, expand = check_and_get_valid_parameters(
+                                limit, offset, expand)
+    if expand: 
+        error_msg, departments, offices = load_departments_offices(expand)
     if not error_msg:
         if employee_id: #  manage employee detail, limit and offset has not effect here
             response_data = employee_detail(expand, offices, departments, 
