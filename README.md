@@ -40,9 +40,9 @@ For the first time run project by executing:
 
 #### Parameters 
 
-limit
-offset
-expand
+- limit
+- offset
+- expand
 
 ### Examples
 
