@@ -142,7 +142,8 @@ def get_list_in_list(list1, list2):
 
     return list1
 
-""" Function to check parameters
+
+""" Function to check parameters and get only valid entries
 Parameters
     limit = <string>
     offset = <string> *optional
@@ -170,24 +171,105 @@ Parameters
     request 
     employee_id ID ID of employee <integer> *optional
 """
-def employees(request, employee_id=None):
-    limit = request.GET.get('limit', CONFIG['limit'])
-    offset = request.GET.get('offset', None)
-    expand = request.GET.getlist('expand', None)
-    error_msg = None
+def employees_old(request, employee_id=None):
+    #error_msg = None
     offices = None
     departments = None
+    expand = request.GET.getlist('expand', None)
+    limit = request.GET.get('limit', CONFIG['limit'])
+    offset = request.GET.get('offset', None)
 
-    limit, offset, expand = check_and_get_valid_parameters(
-                                limit, offset, expand)
-    if expand: 
-        error_msg, departments, offices = load_departments_offices(expand)
+    limit, offset, expand = check_and_get_valid_parameters(limit, offset, expand)
+
+    if expand: error_msg, departments, offices = load_departments_offices(expand)
+
     if not error_msg:
         if employee_id: #  manage employee detail, limit and offset has not effect here
-            response_data = employee_detail(expand, offices, departments, 
-                                employee_id=employee_id)
+            response_data = employee_detail(expand, offices, departments, employee_id=employee_id)
         else:
-            response_data = employee_list(str(limit), offset, 
-                                expand, offices, departments)
+            response_data = employee_list(str(limit), offset, expand, offices, departments)
+    else:
+        response_data = error_msg
 
     return JsonResponse(response_data, safe=False)
+
+
+
+
+
+
+def employees(request, employee_id=None):
+    expand = request.GET.getlist('expand', None)
+    limit = request.GET.get('limit', CONFIG['limit'])
+    offset = request.GET.get('offset', None)
+
+    error_msg = check_parameters(employee_id, expand, limit, offset)
+    #  now all parameters are valid, or if exist any error, display msg
+
+    if not error_msg:
+        if employee_id: limit, offset = 1, (employee_id - 1)
+        response_data = get_employees(expand, limit, offset)
+    else:
+        response_data = error_msg
+    
+    return JsonResponse(response_data, safe=False)
+
+
+def check_parameters(employee_id, expand, limit, offset):
+    errors = []
+
+    if employee_id == 0:
+        #  another's possibilities of invalid entries, are checked by django
+        errors.append('Employee ID must be greater than zero.')
+    
+    if limit:
+        try:
+            limit = int(limit)
+            if (limit > CONFIG['max_limit']) or limit == 0:
+                errors.append('Limit must greater than zero and lower than %s.' % (CONFIG['max_limit']))
+            elif limit < 0:
+                errors.append('Limit must be an integer.')
+        except:
+            errors.append('Limit must be an integer.')
+
+    if offset:
+        try:
+            offset = int(offset)
+            if offset == 0:
+                errors.append('Offset must greater than zero.')
+            elif offset < 0:
+                errors.append('Offset must be an integer.')
+        except:
+            errors.append('Offset must be an integer.')
+
+    if expand:
+        for element in expand:
+            expand_error = (check_value_generate_list(element, CONFIG['expand_availables']))
+            if expand_error: errors.append(expand_error)
+
+    if len(errors) > 0: error_msg = errors
+    else: error_msg = None
+
+    return error_msg
+
+
+def get_employees(expand, limit, offset):
+    errors = []
+
+
+
+    if len(errors) > 0: response_data = errors
+    else: response_data = None
+
+    return response_data
+
+
+def check_value_generate_list(value, dict_generate):
+    errors = []
+
+    print(value.split('.'))
+
+    if len(errors) > 0: response_data = errors
+    else: response_data = None
+
+    return response_data

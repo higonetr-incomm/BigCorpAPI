@@ -15,11 +15,10 @@ import os
 API_CONFIG = {
     'limit': 100, #  default limit of json return instances
     'max_limit': 1000, #  max limit of json return instances
-    'expand_availables': [
-        'manager', 'office', 'department',
-        'manager.office', 'department.superdepartment',
-        'manager.department', 'manager.department.superdepartment'
-    ], #  options for expand parameter
+    'expand_availables': {
+        'manager': ['manager', 'office', 'department'],
+        'department': ['superdepartment'],
+    }, #  options for expand parameter
     'query_url': 'https://rfy56yfcwk.execute-api.us-west-1.amazonaws.com/bigcorp/employees',
     #  url from api for querys
 }
