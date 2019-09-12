@@ -16,8 +16,13 @@ API_CONFIG = {
     'limit': 100, #  default limit of json return instances
     'max_limit': 1000, #  max limit of json return instances
     'expand_availables': {
-        'manager': ['manager', 'office', 'department'],
-        'department': ['superdepartment'],
+        'can_start_with': ['manager', 'office', 'department'],
+        'options': {
+            'manager': ['manager', 'office', 'department'],
+            'office': None,
+            'department': ['superdepartment'],
+            'superdepartment': ['superdepartment'],
+        }
     }, #  options for expand parameter
     'query_url': 'https://rfy56yfcwk.execute-api.us-west-1.amazonaws.com/bigcorp/employees',
     #  url from api for querys
