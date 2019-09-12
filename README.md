@@ -19,17 +19,24 @@ For the first time run project by executing:
 
 ### Config on settings  (service/service/settings.py)
 
+```
 **API_CONFIG** = {
     'limit': 100, #  default limit of json return instances
     'max_limit': 1000, #  max limit of json return instances
-    'expand_availables': [
-        'manager', 'office', 'department',
-        'manager.office', 'department.superdepartment',
-        'manager.department', 'manager.department.superdepartment'
-    ], #  options for expand parameter
+    'expand_availables': {
+        'can_start_with': ['manager', 'office', 'department'],
+        'options': {
+            'manager': ['manager', 'office', 'department'],
+            'office': None,
+            'department': ['superdepartment'],
+            'superdepartment': ['superdepartment'],
+        }
+    }, #  options for expand parameter
     'query_url': 'https://rfy56yfcwk.execute-api.us-west-1.amazonaws.com/bigcorp/employees',
     #  url from api for querys
 }
+```
+
 
 ## API
 
@@ -48,6 +55,7 @@ For the first time run project by executing:
 
 ** /employees/14/?expand=manager&expand=manager.office&expand=manager.department.superdepartment&expand=office&expand=department **
 
+```
 {
     "first": "Matthew",
     "last": "Lopez",
@@ -89,9 +97,11 @@ For the first time run project by executing:
         "address": "450 Market St"
     }
 }
+```
 
 ** /employees/?expand=manager&expand=manager.office&expand=manager.department.superdepartment&expand=office&expand=department&limit=3&offset=24 **
 
+```
 [
     {
         "first": "Melissa",
@@ -197,10 +207,11 @@ For the first time run project by executing:
         }
     }
 ]
+```
 
 ## Directory
 
-Files worked
+#### Files worked
 
 - service/service/**settings.py**
 - service/service/**urls.py**
