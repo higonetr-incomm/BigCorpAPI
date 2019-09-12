@@ -261,7 +261,9 @@ def get_employees(expands, limit, offset):
     try: 
         with urllib.request.urlopen(query_url) as url:
             employees = json.loads(url.read().decode())
-        employees_response = employees
+        employees_response = []
+        for employee in employees:
+            employees_response.append(employee.copy())
     except:
         errors.append('Error from url %s' % (query_url))
 
@@ -285,28 +287,24 @@ def get_employees(expands, limit, offset):
 
         while True:
             employees_missing = []
-            for employee in employees:
-                print ('employee: %s' % employee)
+            for employee in employees_response:
                 for expand in expands:
-                    print ('expand: %s' % expand)
                     to_expand = employee
                     missing = False
                     for value in expand.split('.'):
-                        print('element in expand %s' % value)
-                        print('to expand %s' % to_expand)
                         if not missing:
                             if to_expand[value]:
                                 if is_integer(to_expand[value]):
                                     print (to_expand[value])
                                     if value == 'office':
-                                        to_expand[value] = get_in(to_expand[value], offices)
+                                        to_expand[value] = get_in(to_expand[value], offices).copy() #  copy value, not reference
                                     elif value == 'department' or value == 'superdepartment':
-                                        to_expand[value] = get_in(to_expand[value], departments)
+                                        to_expand[value] = get_in(to_expand[value], departments).copy() #  copy value, not reference
                                     elif value == 'manager':
                                         employee_exists = exists_in(to_expand[value], employees)
                                         #  employee_exists, is a employee or None
                                         if employee_exists:
-                                            to_expand[value] = employee_exists
+                                            to_expand[value] = employee_exists.copy() #  copy value, not reference
                                         else:
                                             employees_missing.append(to_expand[value])
                                             missing = True
