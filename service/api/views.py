@@ -286,27 +286,35 @@ def get_employees(expands, limit, offset):
         while True:
             employees_missing = []
             for employee in employees:
+                print ('employee: %s' % employee)
                 for expand in expands:
+                    print ('expand: %s' % expand)
                     to_expand = employee
                     missing = False
                     for value in expand.split('.'):
+                        print('element in expand %s' % value)
+                        print('to expand %s' % to_expand)
                         if not missing:
-                            if is_integer(to_expand[value]):
-                                if value == 'office':
-                                    to_expand[value] = offices(to_expand[value])
-                                elif value == 'department' or value == 'superdepartment':
-                                    to_expand[value] = departments(to_expand[value])
-                                elif value == 'manager':
-                                    employee_exists = exists_in(to_expand[value], employees)
-                                    #  employee_exists, is a employee or None
-                                    if employee_exists:
-                                        to_expand[value] = employee_exists
-                                    else:
-                                        employees_missing.append(to_expand[value])
-                                        missing = True
-                            to_expand = to_expand[value]
+                            if to_expand[value]:
+                                if is_integer(to_expand[value]):
+                                    print (to_expand[value])
+                                    if value == 'office':
+                                        to_expand[value] = get_in(to_expand[value], offices)
+                                    elif value == 'department' or value == 'superdepartment':
+                                        to_expand[value] = get_in(to_expand[value], departments)
+                                    elif value == 'manager':
+                                        employee_exists = exists_in(to_expand[value], employees)
+                                        #  employee_exists, is a employee or None
+                                        if employee_exists:
+                                            to_expand[value] = employee_exists
+                                        else:
+                                            employees_missing.append(to_expand[value])
+                                            missing = True
+                                to_expand = to_expand[value]
+                            else:
+                                break
             if ( len(employees_missing) > 0 ):
-                load_employees(employees_missing, employees)
+                load_employees(list(dict.fromkeys(employees_missing)), employees)
             if not ( len(employees_missing) > 0 ):
                 break
 
@@ -357,9 +365,32 @@ def exists_in(id, dict):
 
 
 def load_employees(employees_missing, employees):
-    assert False, employees_missing
-    return None
+    query_url = CONFIG['query_url']
+    first_parameter_load = False
+
+    for employee_id in employees_missing:
+        if not first_parameter_load:
+            query_url += '?id=%s' % (employee_id)
+            first_parameter_load = True
+        else:
+            query_url += '&id=%s' % (employee_id)
+
+    try: 
+        with urllib.request.urlopen(query_url) as url:
+            news_employees = json.loads(url.read().decode())
+            for employee in news_employees:
+                employees.append(employee)
+    except:
+        pass
+
+    return employees
 
 
-
+def get_in(id, dict):
+    found = {}
+    for element in dict:
+        if element['id'] == id:
+            found = element
+            break
+    return found
 # get offices get departments
