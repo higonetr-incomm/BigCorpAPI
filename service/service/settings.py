@@ -13,19 +13,21 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 API_CONFIG = {
-    'limit': 100, #  default limit of json return instances
-    'max_limit': 1000, #  max limit of json return instances
+    'limit': 100,  # default limit of json return instances
+    'max_limit': 1000,  # max limit of json return instances
     'expand_availables': {
         'can_start_with': ['manager', 'office', 'department'],
         'options': {
             'manager': ['manager', 'office', 'department'],
-            'office': None,
+            'office': [],
             'department': ['superdepartment'],
             'superdepartment': ['superdepartment'],
         }
-    }, #  options for expand parameter
+    },  # options for expand parameter
     'query_url': 'https://rfy56yfcwk.execute-api.us-west-1.amazonaws.com/bigcorp/employees',
-    #  url from api for querys
+    'offices_path': 'resources/offices.json',
+    'departments_path': 'resources/departments.json',
+    # url from api for querys
 }
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)

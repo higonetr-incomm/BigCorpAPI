@@ -20,9 +20,9 @@ For the first time run project by executing:
 ### Config on settings  (service/service/settings.py)
 
 ```
-**API_CONFIG** = {
-    'limit': 100, #  default limit of json return instances
-    'max_limit': 1000, #  max limit of json return instances
+API_CONFIG = {
+    'limit': 100,  # default limit of json return instances
+    'max_limit': 1000,  # max limit of json return instances
     'expand_availables': {
         'can_start_with': ['manager', 'office', 'department'],
         'options': {
@@ -31,9 +31,11 @@ For the first time run project by executing:
             'department': ['superdepartment'],
             'superdepartment': ['superdepartment'],
         }
-    }, #  options for expand parameter
+    },  # options for expand parameter
     'query_url': 'https://rfy56yfcwk.execute-api.us-west-1.amazonaws.com/bigcorp/employees',
-    #  url from api for querys
+    'offices_path': 'resources/offices.json',
+    'departments_path': 'resources/departments.json',
+    # url from api for querys
 }
 ```
 
