@@ -1,6 +1,4 @@
-# Glide fullstack-th 
-
-Big Corp API Project
+# Big Corp API Project
 
 ## Run project *(Linux Environment)*
 
